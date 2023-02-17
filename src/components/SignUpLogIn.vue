@@ -1,21 +1,199 @@
 <template>
-    <container>
+    <div style="width: 100%;">
         <nav class="desktopNav">
             <h1>سایت کاریابی</h1>
         </nav>
-        <div></div>
-        <div class="loginPartContainer">
-            <div class="titlePart">
-                ثبت‌نام/ورود
+        <div class="mainLogSignBody">
+            <div class="textContainer">
+                <h1>کاریابی چه کمکی به من می‌کنه؟</h1>
+                <h4>همین حالا در کاریابی ثبت‌نام کن و رزومه‌ات رو برای آگهی‌های استخدام شرکت‌های معتبر بفرست.</h4>
             </div>
-            <div class="mainBox">
-
+            <div class="loginPartContainer">
+                <div class="titlePart">
+                    <div class="loginSignupBtn">
+                        <div id="loginBtn" @click="goToLogin()">ورود</div>
+                    </div>
+                    <div class="loginSignupBtn">
+                        <div id="signupBtn" @click="goToSignup()">ثبت‌نام</div>
+                    </div>
+                </div>
+                <div class="mainBox">
+                    <div v-if="loginPart == true">
+                        <div class="email_part">
+                            <p>آدرس ایمیل</p>
+                            <input class="input_1" type="text" placeholder="ایمیل خود را وارد کنید" v-model="userMail" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
+                            <p>رمز عبور</p>
+                            <input class="input_1" type="text" placeholder="رمز عبور خود را وارد کنید" v-model="userPass" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
+                            <p>نوع کاربری</p>
+                            <div class="radio_part">
+                                <p style="margin-bottom: 0; font-size: 14px;">کارجو</p>
+                                <input id="user" class="input_others" type="radio" name="userType" value="normalUser" v-model="userTypeInput" >
+                                <p style="margin-bottom: 0; font-size: 14px;">استادکار</p>
+                                <input id="mastUser" class="input_others" type="radio" name="userType" value="masterUser" v-model="userTypeInput" >
+                                <p style="margin-bottom: 0; font-size: 14px;">شرکت</p>
+                                <input id="compUser" class="input_others" type="radio" name="userType" value="companyUser" v-model="userTypeInput" >
+                            </div>
+                        </div>
+                        <div class="mobileLoginPhoneBtn">
+                            <div @click="logninFunc(userMail, userPass, userTypeInput)">ورود</div>
+                        </div>
+                    </div>
+                    <div v-else style="margin-top: -5% !important;">
+                        <div class="email_part">
+                            <p>آدرس ایمیل</p>
+                            <input class="input_1" type="text" placeholder="ایمیل خود را وارد کنید" v-model="userMail" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
+                            <p>رمز عبور</p>
+                            <input class="input_1" type="text" placeholder="رمز عبور خود را وارد کنید" v-model="userPass" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
+                            <p>تکرار رمز عبور</p>
+                            <input class="input_1" type="text" placeholder="رمز عبور خود را مجددا کنید" v-model="userPassRepeat" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
+                            <p>نوع کاربری</p>
+                            <div class="radio_part">
+                                <p style="margin-bottom: 0; font-size: 14px;">کارجو</p>
+                                <input id="user" class="input_others" type="radio" name="userType" value="normalUser" v-model="userTypeInput" >
+                                <p style="margin-bottom: 0; font-size: 14px;">استادکار</p>
+                                <input id="mastUser" class="input_others" type="radio" name="userType" value="masterUser" v-model="userTypeInput" >
+                                <p style="margin-bottom: 0; font-size: 14px;">شرکت</p>
+                                <input id="compUser" class="input_others" type="radio" name="userType" value="companyUser" v-model="userTypeInput" >
+                            </div>
+                        </div>
+                        <div class="mobileLoginPhoneBtn">
+                            <div @click="signupFunc(userMail, userPass, userPassRepeat, userTypeInput)">ثبت‌نام</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </container>
+    </div>
 </template>
 <script>
 
+export default {
+    data () {
+        return {
+            loginPart: true,
+            userMail: null,
+            userPass: null,
+            userPassRepeat: null,
+            userTypeInput: 'normalUser',
+            signupList: [],
+        }
+    },
+    mounted() {
+        document.getElementById('loginBtn').style.borderTop = '5px solid #1abc9c';
+        document.getElementById('signupBtn').style.borderTop = 'none';
+    },
+    methods: {
+        goToLogin() {
+            document.getElementById('loginBtn').style.borderTop = '5px solid #1abc9c';
+            document.getElementById('signupBtn').style.borderTop = 'none';
+            this.userMail = null;
+            this.userPass = null;
+            this.loginPart = true;
+        },
+        goToSignup() {
+            console.log(this.signupList)
+            document.getElementById('signupBtn').style.borderTop = '5px solid #1abc9c';
+            document.getElementById('loginBtn').style.borderTop = 'none';
+            this.userMail = null;
+            this.userPass = null;
+            this.userPassRepeat = null;
+            this.loginPart = false;
+        },
+        emptyCheck(mail, pass) {
+            if (mail == null || mail == '' || pass == null || pass == '') {
+                this.$alert(
+                    "لطفا همه فیلد‌ها رو وارد کنید!",
+                    "",
+                    "warning"
+                );
+                return false;
+            } else {
+                return true;
+            }
+        },
+        emptyCheck2(mail, pass, passRepeat) {
+            if (mail == null || mail == '' || pass == null || pass == '' || passRepeat == null || passRepeat == '') {
+                this.$alert(
+                    "لطفا همه فیلد‌ها رو وارد کنید!",
+                    "",
+                    "warning"
+                );
+                return false;
+            } else {
+                if (this.signupList.length != 0) {
+                    for (let j = 0; j < this.signupList.length; j++) {
+                        if (this.signupList[j].mail == mail) {
+                            this.$alert(
+                                "با این ایمیل، قبلا ثبت‌نام صورت گرفته است!",
+                                "",
+                                "warning"
+                            );
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
+                    if (pass == passRepeat) {
+                        return true;
+                    } else {
+                        this.$alert(
+                            "رمز عبور و تکرار رمز عبور با هم همخوانی ندارند!",
+                            "",
+                            "warning"
+                        );
+                        return false;
+                    }
+                    
+                }
+            }
+        },
+        logninFunc(name, pass, perm) {
+            if(this.emptyCheck(name, pass) == true) {
+                if (console.log(this.signupList.length) == 0) {
+                    this.$alert(
+                        "شماره تلفن همراه یا رمز عبور اشتباه است!",
+                        "",
+                        "error"
+                    );
+                } else {
+                    for (let i = 0; i < this.signupList.length; i++) {
+                        console.log( this.signupList.length)
+                        if (this.signupList[i].name == name && this.signupList[i].pass == pass && this.signupList[i].perm == perm) {
+                            this.$cookies.set('userEntered', true)
+                            this.$router.push({ path: '/home' });
+                        }
+                    }
+                    this.$alert(
+                        "شماره تلفن همراه یا رمز عبور اشتباه است!",
+                        "",
+                        "error"
+                    );
+                }
+            }
+        },
+        signupFunc(mail, pass, passRepeat, perm) {
+            if (this.emptyCheck2(mail, pass, passRepeat) == true) {
+                this.signupList.push({
+                    mail: mail,
+                    pass: pass,
+                    perm: perm
+                });
+                this.$cookies.set('userEntered', true)
+                this.$router.push({ path: '/home' });
+            }
+        },
+    }
+}
 </script>
 <style scoped>
 .desktopNav {
@@ -26,17 +204,149 @@
     background: transparent;
     color: white;
 }
+.mainLogSignBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: -3%;
+    padding: 3.8%;
+}
+.textContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: right;
+    height: 100%;
+}
+.textContainer h1 {
+    color: #555;
+    width: 100%;
+    font-weight: bold;
+}
+.textContainer h4 {
+    color: #555;
+    font-weight: bold;
+    width: 100%;
+}
 .loginPartContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    background-color: white;
+    width: 37%;
+    height: 100%;
+    margin-top: 2%;
 }
 .titlePart {
     display: flex;
+    justify-content: space-around;
     align-items: center;
+    width: 100%;
 }
 .mainBox {
-
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.email_part {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0 10%;
+}
+.email_part p {
+    margin-bottom: 0;
+    padding: 5% 0;
+}
+.input_1 {
+    width: 100%;
+    min-height: 50px;
+    direction: ltr;
+    background-size: 21px;
+    padding-right: 40px;
+    padding-left: 10px;
+    right: 0;
+    border-radius: 7px;
+    border: 2px solid white;
+    box-shadow: 1px 0px 10px 0px rgb(159, 0, 17, 16%);
+}
+input:focus {
+    border: 2px solid white;
+    outline-width: 0;
+}
+input:-ms-input-placeholder {
+    text-align: right;
+    color: #3D3D3D;
+    opacity:0.8;
+}
+input::-webkit-input-placeholder {
+    text-align: right;
+    color: #3D3D3D;
+    opacity:0.8;
+}
+input::-moz-placeholder {
+    text-align: right;
+    color: #3D3D3D;
+    opacity:0.8;
+}
+.radio_part {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: -6%;
+}
+.input_others {
+    margin-left: 20%;
+}
+.mobileLoginPhoneBtn {
+    display: inline-flex;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0% !important;
+}
+.mobileLoginPhoneBtn div {
+    width: 80% !important;
+    text-align: center;
+    border: none;
+    height: 5vh;
+    font-family: "IranSans Regular";
+    background: #1abc9c;
+    color: white;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+.loginSignupBtn {
+    display: inline-flex;
+    align-content: center;
+    text-align: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 0% !important;
+}
+.loginSignupBtn div {
+    font-size: 20px;
+    width: 100% !important;
+    text-align: center;
+    border: none;
+    height: 5vh;
+    font-family: "IranSans Regular";
+    background: white;
+    color: #3ab1e4;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 2rem;
+}
+.loginSignupBtn div:hover {
+    font-weight: bold;
 }
 </style>

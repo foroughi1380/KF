@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
+import VueSimpleAlert from "vue-simple-alert"
+import VueCookies from 'vue-cookies'
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -24,6 +26,9 @@ library.add(faUser, faUserAlt, faRunning, faBuilding, faGraduationCap, faLanguag
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)
+
+Vue.use(VueSimpleAlert);
+Vue.use(VueCookies)
 
 Vue.config.productionTip = false
 

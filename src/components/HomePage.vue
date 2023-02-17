@@ -1,5 +1,5 @@
 <template>
-  <container>
+  <div>
     <nav class="desktopNav">
       <div class="desktopLogo">
         <p >سایت کاریابی</p>
@@ -44,7 +44,7 @@
         </p>
       </v-col>
     </v-row>
-  </container>
+  </div>
 </template>
 
 <script>
@@ -53,13 +53,24 @@ export default {
 
   data: () => ({
     
-}),
+  }),
+  created() {
+    if (this.$cookies.get('userEntered') == 'true') {
+      this.$router.push({ path: '/home' })
+    } else {
+      this.$router.push({ path: '/' })
+    }
+  },
   methods: {
   goToHome() {
     this.$router.push({ path: '/' });
   },
   goToResume() {
     this.$router.push({ path: '/resume-maker' })
+  },
+  exitFromAccount() {
+    this.$cookies.remove("userEntered");
+    this.$router.push({ path: "/"});
   },
 },
 }
@@ -78,7 +89,7 @@ export default {
 }
 .desktopMenu {
   width: 50%;
-  height: 100%;
+  height: 65px;
   display: flex;
   justify-content: flex-end;
 }
