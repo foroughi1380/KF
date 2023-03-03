@@ -9,15 +9,15 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    name: 'home',
+    meta: { login: false },
+    component: HomePage
+  },
+  {
+    path: '/login-signup',
     name: 'signUpLogIn',
     meta: { login: false },
     component: SignUpLogIn
-  },
-  {
-    path: '/home',
-    name: 'home',
-    meta: { login: true },
-    component: HomePage
   },
   {
     path: '/resume-maker',

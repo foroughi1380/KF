@@ -44,8 +44,13 @@
                     </div>
                     <div v-else style="margin-top: -5% !important;">
                         <div class="email_part">
+                            <p>نام و نام خانوادگی</p>
+                            <input class="input_name" type="text" placeholder="نام و نام خانوادگی خود را وارد کنید" v-model="userName" autocomplete="off" >
+                        </div>
+                        <div class="email_part">
                             <p>آدرس ایمیل</p>
-                            <input class="input_1" type="text" placeholder="ایمیل خود را وارد کنید" v-model="userMail" autocomplete="off" >
+                            <input class="input_1" type="text" placeholder="ایمیل خود را وارد کنید" v-model="userMail" @blur="validateEmail" autocomplete="off" >
+                            <p v-if="emailError == true" style="color: red; font-weight: fold;">آدرس ایمیل معتبر نیست</p>
                         </div>
                         <div class="email_part">
                             <p>رمز عبور</p>
@@ -67,7 +72,7 @@
                             </div>
                         </div>
                         <div class="mobileLoginPhoneBtn">
-                            <div @click="signupFunc(userMail, userPass, userPassRepeat, userTypeInput)">ثبت‌نام</div>
+                            <div @click="signupFunc(userName, userMail, userPass, userPassRepeat, userTypeInput)">ثبت‌نام</div>
                         </div>
                     </div>
                 </div>
@@ -76,11 +81,14 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 
 export default {
     data () {
         return {
             loginPart: true,
+            emailError: false,
+            userName: null,
             userMail: null,
             userPass: null,
             userPassRepeat: null,
@@ -101,7 +109,6 @@ export default {
             this.loginPart = true;
         },
         goToSignup() {
-            console.log(this.signupList)
             document.getElementById('signupBtn').style.borderTop = '5px solid #1abc9c';
             document.getElementById('loginBtn').style.borderTop = 'none';
             this.userMail = null;
@@ -157,9 +164,16 @@ export default {
                 }
             }
         },
-        logninFunc(name, pass, perm) {
-            if(this.emptyCheck(name, pass) == true) {
-                if (console.log(this.signupList.length) == 0) {
+        validateEmail() {
+            if (/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/.test(this.userMail)) {
+                this.emailError = false;
+            } else {
+                this.emailError = true;
+            }
+        },
+        logninFunc(mail, pass, perm) {
+            if(this.emptyCheck(mail, pass) == true) {
+                if (this.signupList.length == 0) {
                     this.$alert(
                         "شماره تلفن همراه یا رمز عبور اشتباه است!",
                         "",
@@ -167,10 +181,10 @@ export default {
                     );
                 } else {
                     for (let i = 0; i < this.signupList.length; i++) {
-                        console.log( this.signupList.length)
-                        if (this.signupList[i].name == name && this.signupList[i].pass == pass && this.signupList[i].perm == perm) {
-                            this.$cookies.set('userEntered', true)
-                            this.$router.push({ path: '/home' });
+                        if (this.signupList[i].name == mail && this.signupList[i].pass == pass && this.signupList[i].perm == perm) {
+                            this.$cookies.set('signedUpList', this.signupList);
+                            this.$cookies.set('userEntered', true);
+                            this.$router.push({ path: '/' });
                         }
                     }
                     this.$alert(
@@ -181,15 +195,31 @@ export default {
                 }
             }
         },
-        signupFunc(mail, pass, passRepeat, perm) {
+        signupFunc(name, mail, pass, passRepeat, perm) {
             if (this.emptyCheck2(mail, pass, passRepeat) == true) {
-                this.signupList.push({
-                    mail: mail,
-                    pass: pass,
-                    perm: perm
-                });
-                this.$cookies.set('userEntered', true)
-                this.$router.push({ path: '/home' });
+                var bodyFormData = new FormData();
+                bodyFormData.append("name", name);
+                bodyFormData.append("email", mail);
+                bodyFormData.append("password", pass);
+                this.$cookies.set('userType', perm);
+                axios({
+                    method: "POST",
+                    url:"http://127.0.0.1:8000/api/v1/register",
+                    data:bodyFormData,
+                })
+                    .then((response) => {
+                        this.$cookies.set('userToken', response.data.access_token)
+                        this.$cookies.set('userEntered', true);
+                        this.$router.push({ path: '/' });
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        this.$alert(
+                            err.response.data.message,
+                            "",
+                            "error"
+                        );
+                    })
             }
         },
     }
@@ -264,6 +294,18 @@ export default {
     width: 100%;
     min-height: 50px;
     direction: ltr;
+    background-size: 21px;
+    padding-right: 40px;
+    padding-left: 10px;
+    right: 0;
+    border-radius: 7px;
+    border: 2px solid white;
+    box-shadow: 1px 0px 10px 0px rgb(159, 0, 17, 16%);
+}
+.input_name {
+    width: 100%;
+    min-height: 50px;
+    direction: rtl;
     background-size: 21px;
     padding-right: 40px;
     padding-left: 10px;

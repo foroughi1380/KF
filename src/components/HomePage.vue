@@ -2,25 +2,36 @@
   <div>
     <nav class="desktopNav">
       <div class="desktopLogo">
-        <p >سایت کاریابی</p>
-        <img src="/images/workLogo.jfif">
+        <div class="siteTitle">
+          <p>سایت کاریابی</p>
+        </div>
+        <div v-if="!userName" style="cursor: pointer;" class="siteTitle" @click="goToSignin()">
+          <p>ورود/ثبت‌نام</p>
+          <font-awesome-icon style="margin-left: 10px;" icon="fa-solid fa-sign-in-alt" />
+        </div>
+        <div v-else style="cursor: pointer;" class="siteTitle" @click="goToUserProfile()">
+          <p>{{userName}}</p>
+        </div>
+        <div v-if="exit == true" style="cursor: pointer;" class="siteTitle" @click="exitFromAccount()">
+          <p>خروج</p>
+        </div>
       </div>
       <div class="desktopMenu">
         <div class="menu_options" @click="goToHome()">
-          <img src="/images/house.png" >
-          <p style="margin-bottom: 0;">خانه</p>
+          <img src="/images/house.png" />
+          <p style="margin-bottom: 0">خانه</p>
         </div>
         <div class="menu_options">
-          <img src="/images/magnifier.png" >
-          <p style="margin-bottom: 0;">جستجوی مشاغل</p>
+          <img src="/images/magnifier.png" />
+          <p style="margin-bottom: 0">جستجوی مشاغل</p>
         </div>
         <div class="menu_options" @click="goToResume()">
-          <img src="/images/sparkles.png" >
-          <p style="margin-bottom: 0;">رزومه‌ساز</p>
+          <img src="/images/sparkles.png" />
+          <p style="margin-bottom: 0">رزومه‌ساز</p>
         </div>
-        <div class="menu_options" style="border-left: 1px solid white;">
-          <img src="/images/gemstone.png" >
-          <p style="margin-bottom: 0;">۵۰ شرکت برتر</p>
+        <div class="menu_options" style="border-left: 1px solid white">
+          <img src="/images/gemstone.png" />
+          <p style="margin-bottom: 0">۵۰ شرکت برتر</p>
         </div>
       </div>
     </nav>
@@ -35,9 +46,7 @@
       </v-col>
 
       <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Karyabi Project
-        </h1>
+        <h1 class="display-2 font-weight-bold mb-3">Karyabi Project</h1>
 
         <p @click="goToResume()" class="subheading font-weight-regular">
           رزومه ساز
@@ -48,32 +57,58 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
 
   data: () => ({
-    
+    isAuth: false,
+    exit: false,
+    userName: null,
   }),
   created() {
-    if (this.$cookies.get('userEntered') == 'true') {
-      this.$router.push({ path: '/home' })
-    } else {
-      this.$router.push({ path: '/' })
-    }
+    this.getUserData();
   },
   methods: {
-  goToHome() {
-    this.$router.push({ path: '/' });
+    goToHome() {
+      this.$router.push({ path: "/" });
+    },
+    goToResume() {
+      this.$router.push({ path: "/resume-maker" });
+    },
+    goToSignin() {
+      this.$router.push({ path: "/login-signup" });
+    },
+    exitFromAccount() {
+      this.$cookies.remove("userEntered");
+      this.isAuth = false;
+      this.exit = false;
+      this.userName = null;
+      
+    },
+    getUserData() {
+      axios({
+        method: "GET",
+        url: "http://127.0.0.1:8000/api/v1/user",
+        headers: {
+              'Authorization': `Bearer ${this.$cookies.get('userToken')}`
+          }
+      })
+        .then(response => {
+          this.isAuth = true;
+          this.exit = true;
+          this.userName = 'سلام' + ' ' + response.data.data.name;
+        })
+        .catch(err => {
+          console.log(err)
+          this.isAuth = false;
+          this.exit = false;
+          this.userName = null;
+        })
+    },
   },
-  goToResume() {
-    this.$router.push({ path: '/resume-maker' })
-  },
-  exitFromAccount() {
-    this.$cookies.remove("userEntered");
-    this.$router.push({ path: "/"});
-  },
-},
-}
+};
 </script>
 <style scoped>
 .desktopNav {
@@ -115,18 +150,22 @@ export default {
   display: inline-flex;
   align-items: center !important;
   justify-content: space-between;
+  
 }
-.desktopLogo p{
+.siteTitle p {
   font-size: 18px;
   font-weight: bold;
   color: white;
   margin-right: 10px;
   align-self: flex-end;
-  margin-bottom: 0;
   margin-left: 10px;
   width: 100%;
 }
-.desktopLogo img{
-  width: 20px;
+.siteTitle {
+  display: flex;
+  align-items: center;
+  border-right: 1px solid white;
+  border-left: 1px solid white;
+  height: 65px !important;
 }
 </style>
