@@ -20,10 +20,11 @@ import { faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { faSignInAlt } from '@fortawesome/free-solid-svg-icons'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
 
 /* add icons to the library */
-library.add(faUser, faUserAlt, faRunning, faBuilding, faGraduationCap, faLanguage, faStar, faSignInAlt  )
+library.add(faUser, faUserAlt, faRunning, faBuilding, faGraduationCap, faLanguage, faStar, faSignInAlt, faInfoCircle  )
 
 /* add font awesome icon component */
 Vue.component('font-awesome-icon', FontAwesomeIcon)

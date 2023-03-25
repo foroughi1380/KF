@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import HomePage from '../components/HomePage'
 import ResumeMaker from '../components/ResumeMaker'
 import SignUpLogIn from '../components/SignUpLogIn'
+import UserProfile from '../components/UserProfile'
 
 Vue.use(VueRouter)
 
@@ -25,6 +26,12 @@ const routes = [
     meta: { login: true },
     component: ResumeMaker
   },
+  {
+    path: '/user-profile',
+    name: 'user-profile',
+    meta: { login: true },
+    component: UserProfile
+  },
 ]
 
 
@@ -35,7 +42,6 @@ const router = new VueRouter({
 })
 
 function checkLogin() {
-  console.log(window.$cookies.get('userEntered'))
   if (window.$cookies.get('userEntered') == 'true' || window.$cookies.get('userEntered') == true) {
     return true;
         

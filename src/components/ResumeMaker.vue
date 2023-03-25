@@ -18,13 +18,9 @@
                     <img src="/images/sparkles.png" >
                     <p style="margin-bottom: 0;">رزومه‌ساز</p>
                 </div>
-                <div class="menu_options" style="border-left: 1px solid white;">
-                    <img src="/images/gemstone.png" >
-                    <p style="margin-bottom: 0;">۵۰ شرکت برتر</p>
-                </div>
             </div>
         </nav>
-        <container >
+        <container>
             <v-row class="text-center containerClass">
                 <div class="generalPart">
                     <div class="profile_pic">
@@ -206,7 +202,7 @@ export default {
             this.savedAvatarBoolean = true
         },
         goToHome() {
-            this.$router.push({ path: '/home' });
+            this.$router.push({ path: '/' });
         },
     },
 }

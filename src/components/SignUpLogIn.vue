@@ -172,27 +172,28 @@ export default {
             }
         },
         logninFunc(mail, pass, perm) {
-            if(this.emptyCheck(mail, pass) == true) {
-                if (this.signupList.length == 0) {
-                    this.$alert(
-                        "شماره تلفن همراه یا رمز عبور اشتباه است!",
-                        "",
-                        "error"
-                    );
-                } else {
-                    for (let i = 0; i < this.signupList.length; i++) {
-                        if (this.signupList[i].name == mail && this.signupList[i].pass == pass && this.signupList[i].perm == perm) {
-                            this.$cookies.set('signedUpList', this.signupList);
-                            this.$cookies.set('userEntered', true);
-                            this.$router.push({ path: '/' });
-                        }
-                    }
-                    this.$alert(
-                        "شماره تلفن همراه یا رمز عبور اشتباه است!",
-                        "",
-                        "error"
-                    );
-                }
+            if (this.emptyCheck(mail, pass) == true) {
+                var bodyFormData = new FormData();
+                bodyFormData.append("email", mail);
+                bodyFormData.append("password", pass);
+                this.$cookies.set('userType', perm);
+                axios({
+                    method: "POST",
+                    url:"http://127.0.0.1:8000/api/v1/login",
+                    data:bodyFormData,
+                })
+                    .then((response) => {
+                        this.$cookies.set('userToken', response.data.access_token)
+                        this.$cookies.set('userEntered', true);
+                        this.$router.push({ path: '/' });
+                    })
+                    .catch((err) => {
+                        this.$alert(
+                            err.response.data.message,
+                            "",
+                            "error"
+                        );
+                    })
             }
         },
         signupFunc(name, mail, pass, passRepeat, perm) {

@@ -9,12 +9,25 @@
           <p>ورود/ثبت‌نام</p>
           <font-awesome-icon style="margin-left: 10px;" icon="fa-solid fa-sign-in-alt" />
         </div>
-        <div v-else style="cursor: pointer;" class="siteTitle" @click="goToUserProfile()">
+        <div v-else class="siteTitleName">
+          <v-select
+            :label="userName"
+            :items="items"
+            v-model="selected_item"
+            solo
+            background-color="#7ead7e"
+            dark
+            :placeholder="userName"
+            persistent-placeholder
+            @change="goToPage(selected_item)"
+          ></v-select>
+        </div>
+        <!-- <div v-else style="cursor: pointer;" class="siteTitle" @click="goToUserProfile()">
           <p>{{userName}}</p>
         </div>
         <div v-if="exit == true" style="cursor: pointer;" class="siteTitle" @click="exitFromAccount()">
           <p>خروج</p>
-        </div>
+        </div> -->
       </div>
       <div class="desktopMenu">
         <div class="menu_options" @click="goToHome()">
@@ -28,10 +41,6 @@
         <div class="menu_options" @click="goToResume()">
           <img src="/images/sparkles.png" />
           <p style="margin-bottom: 0">رزومه‌ساز</p>
-        </div>
-        <div class="menu_options" style="border-left: 1px solid white">
-          <img src="/images/gemstone.png" />
-          <p style="margin-bottom: 0">۵۰ شرکت برتر</p>
         </div>
       </div>
     </nav>
@@ -63,14 +72,24 @@ export default {
   name: "HelloWorld",
 
   data: () => ({
+    items: ['پروفایل کاربری', 'خروج'],
     isAuth: false,
     exit: false,
     userName: null,
+    selected_item: null
   }),
   created() {
     this.getUserData();
   },
   methods: {
+    goToPage(item) {
+      if (item == 'پروفایل کاربری') {
+        this.$router.push({ path: "/user-profile" });
+      } else if (item == 'خروج') {
+        this.exitFromAccount();
+      }
+
+    },
     goToHome() {
       this.$router.push({ path: "/" });
     },
@@ -80,12 +99,14 @@ export default {
     goToSignin() {
       this.$router.push({ path: "/login-signup" });
     },
+    goToUserProfile() {
+      this.$router.push({ path: "/user-profile" });
+    },
     exitFromAccount() {
       this.$cookies.remove("userEntered");
       this.isAuth = false;
       this.exit = false;
       this.userName = null;
-      
     },
     getUserData() {
       axios({
@@ -164,8 +185,38 @@ export default {
 .siteTitle {
   display: flex;
   align-items: center;
+  justify-content: center !important;
   border-right: 1px solid white;
   border-left: 1px solid white;
   height: 65px !important;
+}
+.siteTitleName {
+  display: flex;
+  align-items: center;
+  justify-content: center !important;
+  border-left: 1px solid white;
+  height: 65px !important;
+  margin: 0 10px 0 10px;
+}
+</style>
+<style>
+.v-menu__content {
+  top: 60px !important;
+}
+.v-input__control {
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.v-text-field__details {
+  display: none !important;
+}
+.v-text-field.v-text-field--solo .v-input__control {
+  margin-left: 10px;
+}
+.v-sheet.v-list:not(.v-sheet--outlined) {
+  background: #7ead7e;
+}
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: white;
 }
 </style>
