@@ -1,49 +1,7 @@
 <template>
   <div>
-    <nav class="desktopNav">
-      <div class="desktopLogo">
-        <div class="siteTitle">
-          <p>سایت کاریابی</p>
-        </div>
-        <div v-if="!userName" style="cursor: pointer;" class="siteTitle" @click="goToSignin()">
-          <p>ورود/ثبت‌نام</p>
-          <font-awesome-icon style="margin-left: 10px;" icon="fa-solid fa-sign-in-alt" />
-        </div>
-        <div v-else class="siteTitleName">
-          <v-select
-            :label="userName"
-            :items="items"
-            v-model="selected_item"
-            solo
-            background-color="#7ead7e"
-            dark
-            :placeholder="userName"
-            persistent-placeholder
-            @change="goToPage(selected_item)"
-          ></v-select>
-        </div>
-        <!-- <div v-else style="cursor: pointer;" class="siteTitle" @click="goToUserProfile()">
-          <p>{{userName}}</p>
-        </div>
-        <div v-if="exit == true" style="cursor: pointer;" class="siteTitle" @click="exitFromAccount()">
-          <p>خروج</p>
-        </div> -->
-      </div>
-      <div class="desktopMenu">
-        <div class="menu_options" @click="goToHome()">
-          <img src="/images/house.png" />
-          <p style="margin-bottom: 0">خانه</p>
-        </div>
-        <div class="menu_options">
-          <img src="/images/magnifier.png" />
-          <p style="margin-bottom: 0">جستجوی مشاغل</p>
-        </div>
-        <div class="menu_options" @click="goToResume()">
-          <img src="/images/sparkles.png" />
-          <p style="margin-bottom: 0">رزومه‌ساز</p>
-        </div>
-      </div>
-    </nav>
+    <site-header/>
+
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
@@ -67,10 +25,11 @@
 
 <script>
 import axios from 'axios'
+import SiteHeader from "@/components/SiteHeader";
 
 export default {
   name: "HelloWorld",
-
+  components: {SiteHeader},
   data: () => ({
     items: ['پروفایل کاربری', 'خروج'],
     isAuth: false,
@@ -197,26 +156,5 @@ export default {
   border-left: 1px solid white;
   height: 65px !important;
   margin: 0 10px 0 10px;
-}
-</style>
-<style>
-.v-menu__content {
-  top: 60px !important;
-}
-.v-input__control {
-  flex-direction: row;
-  flex-wrap: nowrap;
-}
-.v-text-field__details {
-  display: none !important;
-}
-.v-text-field.v-text-field--solo .v-input__control {
-  margin-left: 10px;
-}
-.v-sheet.v-list:not(.v-sheet--outlined) {
-  background: #7ead7e;
-}
-.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
-  color: white;
 }
 </style>
