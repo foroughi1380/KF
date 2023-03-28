@@ -4,6 +4,8 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import VueSimpleAlert from "vue-simple-alert"
 import VueCookies from 'vue-cookies'
+import {createPinia} from "pinia";
+import {AuthStore} from "@/stores/auth";
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -33,6 +35,14 @@ Vue.use(VueSimpleAlert);
 Vue.use(VueCookies)
 
 Vue.config.productionTip = false
+
+Vue.use(createPinia());
+
+Vue.mixin({
+  data: () => ({
+    authStore : AuthStore()
+  })
+})
 
 new Vue({
   router,

@@ -1,51 +1,64 @@
 <template>
-  <nav class="desktopNav">
+  <nav class="desktopNav align-stretch">
     <div class="desktopLogo">
+
       <div class="siteTitle">
         <p>سایت کاریابی</p>
+      </div>
+      <div>
+        <v-btn
+            class="ma-2 ml-0 pl-0"
+            text
+            icon
+            color="red lighten-2"
+        >
+          <v-icon color="white">mdi-bell</v-icon>
+        </v-btn>
       </div>
       <div v-if="!userName" style="cursor: pointer;" class="siteTitle" @click="goToSignin()">
         <p>ورود/ثبت‌نام</p>
         <font-awesome-icon style="margin-left: 10px;" icon="fa-solid fa-sign-in-alt" />
       </div>
       <div v-else class="siteTitleName">
-        <v-select
-            :label="userName"
-            :items="items"
-            v-model="selected_item"
-            solo
-            background-color="#7ead7e"
-            dark
-            :placeholder="userName"
-            persistent-placeholder
-            @change="goToPage(selected_item)"
-        >
-
-
-        </v-select>
-      </div>
-
-      <div class="text-center">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
+                class="mr-0 pr-0"
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
                 text
             >
-              Dropdown
+              <div class="flex flex-nowrap">
+                <v-avatar>
+                  <img
+                      src="https://cdn.vuetifyjs.com/images/john.jpg"
+                      alt="John"
+                  >
+                </v-avatar>
+                <span class="defualtHeaderText">
+                  {{userName}}
+                </span>
+              </div>
+
             </v-btn>
           </template>
           <v-list>
             <v-list-item
-                v-for="(item, index) in items"
-                :key="index"
+                v-for="item in items"
+                :key="item"
+                link
+                @click="goToPage(item)"
             >
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title v-text="item"></v-list-item-title>
             </v-list-item>
           </v-list>
+
         </v-menu>
+      </div>
+
+      <div class="text-center">
+
       </div>
 
       <!-- <div v-else style="cursor: pointer;" class="siteTitle" @click="goToUserProfile()">
@@ -126,7 +139,7 @@ export default {
           .then(response => {
             this.isAuth = true;
             this.exit = true;
-            this.userName = 'سلام' + ' ' + response.data.data.name;
+            this.userName = response.data.data.name;
           })
           .catch(err => {
             console.log(err)
@@ -189,6 +202,14 @@ export default {
   margin-left: 10px;
   width: 100%;
 }
+
+.defualtHeaderText {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  font-family: Vazirmatn !important;
+  letter-spacing: 0;
+}
 .siteTitle {
   display: flex;
   align-items: center;
@@ -207,9 +228,9 @@ export default {
 }
 </style>
 <style>
-.v-menu__content {
-  top: 60px !important;
-}
+/*.v-menu__content {*/
+/*  top: 30px !important;*/
+/*}*/
 .v-input__control {
   flex-direction: row;
   flex-wrap: nowrap;
