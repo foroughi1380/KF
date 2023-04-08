@@ -6,14 +6,21 @@
         <p>سایت کاریابی</p>
       </div>
       <div>
-        <v-btn
-            class="ma-2 ml-0 pl-0"
-            text
-            icon
-            color="red lighten-2"
-        >
-          <v-icon color="white">mdi-bell</v-icon>
-        </v-btn>
+        <div class="text-center">
+          <v-dialog
+              v-model="notif_dialog"
+              width="auto"
+          >
+            <template v-slot:activator="{ props }">
+              <v-btn class="text-none ma-2 ml-0 pl-0" stacked text icon v-bind="props" @click="notif_dialog = true">
+                <v-badge content="2" color="error">
+                  <v-icon color="white">mdi-bell</v-icon>
+                </v-badge>
+              </v-btn>
+            </template>
+            <NotificationDialog @onClose="notif_dialog=false"/>
+          </v-dialog>
+        </div>
       </div>
       <div v-if="!userName" style="cursor: pointer;" class="siteTitle" @click="goToSignin()">
         <p>ورود/ثبت‌نام</p>
@@ -88,15 +95,18 @@
 
 <script>
 import axios from "axios";
+import NotificationDialog from "@/components/Notifications/NotificationDialog";
 
 export default {
   name: "SiteHeader",
+  components: {NotificationDialog},
   data: () => ({
     items: ['پروفایل کاربری', 'خروج'],
     isAuth: false,
     exit: false,
     userName: null,
-    selected_item: null
+    selected_item: null,
+    notif_dialog : false
   }),
   created() {
     this.getUserData();
